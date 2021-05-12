@@ -7,9 +7,12 @@ const SEARCH_API =  "https://api.themoviedb.org/3/search/movie?&api_key=04c35731
 
 function App() {
   const [movies_array, setMovies] = useState([]);
+  
   const [searchTerm, setSearchTerm] = useState("");
+  const [dropDownValue, setDropDownValue] = useState("popularity");
   const [pageNumber, setPageNumber] = useState(1);
   const [sortVariable, setSortVarialble] = useState("desc");
+  
   useEffect(() => {
     GetMovies(FEATURED_API);
   }, []);
@@ -24,10 +27,15 @@ function App() {
     if(searchTerm)
     {
       GetMovies(SEARCH_API+searchTerm);
-      // setSearchTerm("");
       setPageNumber(1);
     }
   };
+  const siteClicked = () => {
+    GetMovies(FEATURED_API);
+    setSearchTerm("");
+    setPageNumber(1);
+  }
+
   const onSearchHandler = (e) => {
     setSearchTerm(e.target.value);
   }
@@ -35,54 +43,34 @@ function App() {
     if(pageNumber >1)
     {
       const pg = pageNumber-1;
-      console.log("search : " +searchTerm);
       setPageNumber(pg);
-      if(searchTerm)
-      {
-        GetMovies(SEARCH_API+searchTerm+"&page="+pg);
-      }
-      else
-      {
-        GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page="+pg);
-      }
     }
   }
   const nextPage = () => {
     const pg = pageNumber+1;
-    console.log("search : " +searchTerm);
     setPageNumber(pg);
-      if(searchTerm)
-      {
-        GetMovies(SEARCH_API+searchTerm+"&page="+pg);
-      }
-      else
-      {
-        GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page="+pg);
-      }
-  }
-  const siteClicked = () => {
-    GetMovies(FEATURED_API);
-    setSearchTerm("");
-    setPageNumber(1);
   }
   const dropDownChange = (e) => {
-    console.log(e.target.value);
-    GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+e.target.value+".aesc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
+    setDropDownValue(""+e.target.value);
+    console.log("search term : " + searchTerm + " Dropdown_value : " +  e.target.value + " pageNumber : " + 1 + " sortVariable : desc");
+    // Page Number : 1, dropdown k mutabik setPageNumber(1);
+    //setSortVarialble("desc");
   }
-   const sortChangeHandler = () => {
-     //console.log("sortVariable : " + sortVariable);
-     if(sortVariable === "desc")
-     {
-        setSortVarialble("aesc");
-        console.log("sortVariable : " + sortVariable);
-        GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by=popularity.aesc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
-     }
-     else{
-        setSortVarialble("desc");
-        console.log("sortVariable : " + sortVariable);
-        GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
-     }
-   }
+  const sortChangeHandler = () => {
+    if(sortVariable === "desc")
+    {
+      setSortVarialble("aesc");
+      console.log("search term : " + searchTerm + " Dropdown_value : " +  dropDownValue + " pageNumber : "+ 1 +" sortVariable : asce");
+      // Page Number : 1, setPageNumber(1);
+      //setSortVarialble("asce");
+    }
+    else{
+      setSortVarialble("desc");
+      console.log("search term : " + searchTerm + " Dropdown_value : " +  dropDownValue + " pageNumber : "+ 1 +" sortVariable : desc");
+      // Page Number : 1, setPageNumber(1);
+      //setSortVarialble("desc");
+    }
+  }
   return (
     <>
     <header>
@@ -108,7 +96,7 @@ function App() {
     <div className="movie-container">
       
       {movies_array.length>0 && movies_array.map((movie)=>(
-        <GetMovies key={movie.id} {...movie}/>
+        <GetMovie key={movie.id} {...movie}/>
       ))}
     </div>
     <div className="bars-to-pages">
