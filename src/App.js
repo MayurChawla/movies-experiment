@@ -19,6 +19,7 @@ function App() {
   
   const GetMovies = (API) => {
     fetch(API).then(res => res.json()).then(data => {
+      console.log(data);
       setMovies(data.results);
     })
   };
@@ -52,7 +53,10 @@ function App() {
   }
   const dropDownChange = (e) => {
     setDropDownValue(""+e.target.value);
-    console.log("search term : " + searchTerm + " Dropdown_value : " +  e.target.value + " pageNumber : " + 1 + " sortVariable : desc");
+    console.log(e.target.value);
+    GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+e.target.value+".desc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
+
+    //console.log("search term : " + searchTerm + " Dropdown_value : " +  e.target.value + " pageNumber : " + 1 + " sortVariable : desc");
     // Page Number : 1, dropdown k mutabik setPageNumber(1);
     //setSortVarialble("desc");
   }
@@ -78,11 +82,10 @@ function App() {
         <div className="sort-by-div">
           <select className="sort-by-dropdown" onChange={dropDownChange}>
             <option value="popularity">popularity</option>
-            <option value="yearrelease">year release</option>
-            <option value="runtime">runtime</option>
-            <option value="alphabetical">alphabetical</option>
-            <option value="numberofvotes">number of votes</option>
-            <option value="releasedate">release date</option>
+            <option value="title">alphabetical</option>
+            <option value="vote_average">average rating</option>
+            <option value="vote_count">number of votes</option>
+            <option value="release_date">release date</option>
           </select>
           <button className="sort-by-button" onClick={sortChangeHandler}>&#8693;</button>
         </div>
