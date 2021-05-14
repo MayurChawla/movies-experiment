@@ -7,6 +7,7 @@ const SEARCH_API =  "https://api.themoviedb.org/3/search/movie?&api_key=04c35731
 
 function App() {
   const [movies_array, setMovies] = useState([]);
+  //const [URL_API, setURL_API] = useState(""+FEATURED_API);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [dropDownValue, setDropDownValue] = useState("popularity");
@@ -29,12 +30,16 @@ function App() {
     {
       GetMovies(SEARCH_API+searchTerm);
       setPageNumber(1);
+      setDropDownValue("popularity");
+      setSortVarialble("desc");
     }
   };
   const siteClicked = () => {
     GetMovies(FEATURED_API);
     setSearchTerm("");
     setPageNumber(1);
+    setDropDownValue("popularity");
+    setSortVarialble("desc");
   }
 
   const onSearchHandler = (e) => {
@@ -45,34 +50,94 @@ function App() {
     {
       const pg = pageNumber-1;
       setPageNumber(pg);
+      if(sortVariable==="desc")
+      {
+        if(searchTerm)
+        {
+          GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+dropDownValue+".desc&api_key=04c35731a5ee918f014970082a0088b1&page="+pg+"&query="+searchTerm);
+        }
+        else {
+          GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+dropDownValue+".desc&api_key=04c35731a5ee918f014970082a0088b1&page="+pg);
+        }
+      }
+      else if(sortVariable==="asce")
+      {
+        if(searchTerm)
+        {
+          GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+dropDownValue+".asce&api_key=04c35731a5ee918f014970082a0088b1&page="+pg+"&query="+searchTerm);
+        }
+        else {
+          GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+dropDownValue+".asce&api_key=04c35731a5ee918f014970082a0088b1&page="+pg);
+        }
+      }
     }
   }
   const nextPage = () => {
     const pg = pageNumber+1;
     setPageNumber(pg);
+    if(sortVariable==="desc")
+      {
+        if(searchTerm)
+        {
+          GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+dropDownValue+".desc&api_key=04c35731a5ee918f014970082a0088b1&page="+pg+"&query="+searchTerm);
+        }
+        else {
+          GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+dropDownValue+".desc&api_key=04c35731a5ee918f014970082a0088b1&page="+pg);
+        }
+      }
+      else if(sortVariable==="asce")
+      {
+        if(searchTerm)
+        {
+          GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+dropDownValue+".asce&api_key=04c35731a5ee918f014970082a0088b1&page="+pg+"&query="+searchTerm);
+        }
+        else {
+          GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+dropDownValue+".asce&api_key=04c35731a5ee918f014970082a0088b1&page="+pg);
+        }
+      }
   }
   const dropDownChange = (e) => {
     setDropDownValue(""+e.target.value);
-    console.log(e.target.value);
-    GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+e.target.value+".desc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
-
-    //console.log("search term : " + searchTerm + " Dropdown_value : " +  e.target.value + " pageNumber : " + 1 + " sortVariable : desc");
-    // Page Number : 1, dropdown k mutabik setPageNumber(1);
-    //setSortVarialble("desc");
+    if(searchTerm)
+    {
+      GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+e.target.value+".desc&api_key=04c35731a5ee918f014970082a0088b1&page=1&query="+searchTerm);
+    }
+    else {
+      GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+e.target.value+".desc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
+    }
+    setSearchTerm(searchTerm);
+    setPageNumber(1);
+    setSortVarialble("desc");
+    console.log("search term : " + searchTerm + " Dropdown_value : " +  e.target.value + " pageNumber : " + 1 + " sortVariable : desc");
   }
   const sortChangeHandler = () => {
+    setDropDownValue(dropDownValue);
+    setPageNumber(1);
+    //setSearchTerm(searchTerm);
     if(sortVariable === "desc")
     {
       setSortVarialble("aesc");
+      if(searchTerm)
+      {
+        //SEARCH URL
+        GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+searchTerm+".asce&api_key=04c35731a5ee918f014970082a0088b1&page=1&query="+searchTerm);
+      }
+      else{
+        //DISCOVER URL
+        GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+dropDownValue+".asce&api_key=04c35731a5ee918f014970082a0088b1&page=1");
+      }
       console.log("search term : " + searchTerm + " Dropdown_value : " +  dropDownValue + " pageNumber : "+ 1 +" sortVariable : asce");
-      // Page Number : 1, setPageNumber(1);
-      //setSortVarialble("asce");
     }
     else{
       setSortVarialble("desc");
+      if(searchTerm)
+      {
+        GetMovies("https://api.themoviedb.org/3/search/movie?sort_by="+searchTerm+".desc&api_key=04c35731a5ee918f014970082a0088b1&page=1&query="+searchTerm);
+      }
+      else{
+        GetMovies("https://api.themoviedb.org/3/discover/movie?sort_by="+dropDownValue+".desc&api_key=04c35731a5ee918f014970082a0088b1&page=1");
+      }
       console.log("search term : " + searchTerm + " Dropdown_value : " +  dropDownValue + " pageNumber : "+ 1 +" sortVariable : desc");
-      // Page Number : 1, setPageNumber(1);
-      //setSortVarialble("desc");
     }
   }
   return (
